@@ -45,7 +45,75 @@ const userSchema =new mongo.Schema({
             type:String,
             deafult:'NA'
         }
-    }
+    },
+    userTier:{
+        type:Number,
+        default:1
+    },
+    EstimatedEarnings:{
+        type:Number,
+        default:0
+    },
+    TierOneReffList:[
+        {
+            type:mongo.Schema.Types.ObjectId,
+            require:true,
+        }
+    ],
+    TierTwoReffList:[
+        {
+            type:mongo.Schema.Types.ObjectId,
+            require:true,
+        }
+    ],
+    TierThreeReffList:[
+        {
+            type:mongo.Schema.Types.ObjectId,
+            require:true,
+        }
+    ],
+    TierFourReffList:[
+        {
+            type:mongo.Schema.Types.ObjectId,
+            require:true,
+        }
+    ],
+    TierFiveReffList:[
+        {
+            type:mongo.Schema.Types.ObjectId,
+            require:true,
+        }
+    ],
+    TierSixReffList:[
+        {
+            type:mongo.Schema.Types.ObjectId,
+            require:true,
+        }
+    ],
+    TierSevenReffList:[
+        {
+            type:mongo.Schema.Types.ObjectId,
+            require:true,
+        }
+    ],
+    TierEightReffList:[
+        {
+            type:mongo.Schema.Types.ObjectId,
+            require:true,
+        }
+    ],
+    TierNineReffList:[
+        {
+            type:mongo.Schema.Types.ObjectId,
+            require:true,
+        }
+    ],
+    TierTenReffList:[
+        {
+            type:mongo.Schema.Types.ObjectId,
+            require:true,
+        }
+    ]
 })
 
 module.exports = mongo.model('User',userSchema);

@@ -15,13 +15,13 @@ exports.sendVerificationMail = async (user)=>{
         let URI = `https://useyourcrypto.org/verify-mail/${user.emailPhrase}`;
         let text = `
             <h5>Hey ${user.name},</h5>
-            Please verify Your mail by chicking this think below to continue:
+            Please verify Your mail by clicking this link below to continue:
             <br><br>
             <a href="${URI}">${URI}</a>
         `;
         var message = {
-            from: {name:"USE Crypto", address:"admin@useyourcrypto.org>"},
-            to: "useyourcrypto1@gmail.com",
+            from: {name:"USE Crypto", address:"admin@useyourcrypto.org"},
+            to: user.email,
             subject: "Verify Your Account",
             html: text
           };

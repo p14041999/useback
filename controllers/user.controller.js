@@ -4,10 +4,12 @@ const rstring = require('randomstring');
 const { sendVerificationMail } = require('./mail.controller');
 const jwt = require('jsonwebtoken');
 
+
+// Register
 exports.signup = async (req,res)=>{
     try {
         let {name,email,password,ref} = req.body;
-        let encryptedPassword = bcrypt.hashSync(password,process.env.SECRET_HASH);
+        let encryptedPassword = bcrypt.hashSync(password,parseInt(process.env.SALT));
         let refURI = rstring.generate(16);
         let emailVerifier = rstring.generate(64);
         if(ref=="NA"){
@@ -43,7 +45,7 @@ exports.signup = async (req,res)=>{
                 await sendVerificationMail(user);
                 refferer.reffered = refferer.reffered+1;
                 await refferer.save();
-                let key = jwt.sign(user._id,process.env.SECRET_HASH);
+                let key = jwt.sign({id:user._id},process.env.SECRET_HASH);
                 res.send({
                     success:true,
                     token:key
@@ -58,7 +60,7 @@ exports.signup = async (req,res)=>{
                 })
                 await user.save();
                 await sendVerificationMail(user);
-                let key = jwt.sign(user._id,process.env.SECRET_HASH);
+                let key = jwt.sign({id:user._id},process.env.SECRET_HASH);
                 res.send({
                     success:true,
                     token:key
@@ -74,6 +76,7 @@ exports.signup = async (req,res)=>{
     }
 }
 
+// Login
 exports.signin = async (req,res)=>{
     try {
         let {email,password} = req.body;
@@ -81,7 +84,7 @@ exports.signin = async (req,res)=>{
         if(user){
             if(bcrypt.compareSync(password,user.password)){
                 console.log("SIGN IN SUCCESS!");
-                let key = jwt.sign(user._id,process.env.SECRET_HASH);
+                let key = jwt.sign({id:user._id},process.env.SECRET_HASH);
                 res.send({
                     success:true,
                     token:key
@@ -107,7 +110,7 @@ exports.signin = async (req,res)=>{
     }
 }
 
-
+// Verify Email
 exports.verifyMail = async (req,res)=>{
     try {
         let { phrase } = req.body;
@@ -116,10 +119,10 @@ exports.verifyMail = async (req,res)=>{
             if(!user.isEmailVerified){
                 user.isEmailVerified = true;
                 await user.save();
-                let refferer = await User.findOne({refID:user.parent.id});
-                refferer.validRef = refferer.validRef + 1;
-                await refferer.save();
-                let key = jwt.sign(user._id,process.env.SECRET_HASH);
+                // let refferer = await User.findOne({refID:user.parent.id});
+                // refferer.validRef = refferer.validRef + 1;
+                // await refferer.save();
+                let key = jwt.sign({id:user._id},process.env.SECRET_HASH);
                 res.send({
                     success:true,
                     token:key
@@ -141,11 +144,13 @@ exports.verifyMail = async (req,res)=>{
     }
 }
 
+// Forget Password
 exports.forgotPasswordMail = async (req,res)=>{}
-
 
 exports.forgotPassword = async (req,res)=>{}
 
+
+// Get User Info
 exports.getInfo = async (req,res)=>{
     try {
         let id = req.user;
